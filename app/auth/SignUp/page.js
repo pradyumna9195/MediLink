@@ -288,7 +288,7 @@ const SignUpForm = () => {
             <div className="mt-6 text-center text-slate-600">
               <p className="font-medium">
                 Already have an account?{" "}
-                <a href="/auth/signIn" className="text-primary">
+                <a href="/auth/Login" className="text-primary">
                   Sign In
                 </a>
               </p>
