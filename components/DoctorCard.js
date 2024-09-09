@@ -1,6 +1,32 @@
-"use client"; // Ensure client-side rendering for interactive components
+"use client";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'; 
 
-import React from "react";
+const SearchComp = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchTerm(query);
+    onSearch(query); // Pass the search term back to the parent
+  };
+
+  return (
+    <div className="flex justify-center items-start mt-10 mb-10">
+      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 shadow-md">
+        <input
+          type="text"
+          placeholder="Search by location"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="bg-gray-100 outline-none text-gray-600"
+        />
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="text-gray-600 ml-2" />
+      </div>
+    </div>
+  );
+};
 
 const DoctorCard = ({ doctor }) => {
   return (
@@ -32,12 +58,66 @@ const DoctorCard = ({ doctor }) => {
   );
 };
 
-const DoctorsList = ({ doctors }) => {
+const DoctorsList = () => {
+  const doctorsData = [
+    {
+      name: "Dr. Samuel",
+      location: "Bengaluru",
+      languages: ["Hindi", "English"],
+      specialization: "ENT",
+      phone: "55664354",
+    },
+    {
+      name: "Dr. Anita",
+      location: "Mumbai",
+      languages: ["Marathi", "English"],
+      specialization: "Cardiology",
+      phone: "99887766",
+    },
+    {
+      name: "Dr. Rajesh Kumar",
+      location: "Delhi",
+      languages: ["Hindi", "English"],
+      specialization: "Orthopedics",
+      phone: "98765432",
+    },
+    {
+      name: "Dr. Priya Sharma",
+      location: "Bengaluru",
+      languages: ["Kannada", "English"],
+      specialization: "Dermatology",
+      phone: "91234567",
+    },
+    {
+      name: "Dr. Anil Verma",
+      location: "Kolkata",
+      languages: ["Bengali", "English"],
+      specialization: "Pediatrics",
+      phone: "99887755",
+    },
+    {
+      name: "Dr. Sunita Patel",
+      location: "Ahmedabad",
+      languages: ["Gujarati", "English"],
+      specialization: "Gynecology",
+      phone: "94567890",
+    },
+  ];
+
+  const [filteredDoctors, setFilteredDoctors] = useState(doctorsData);
+
+  const handleSearch = (query) => {
+    const filtered = doctorsData.filter((doctor) =>
+      doctor.location.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredDoctors(filtered);
+  };
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen text-slate-700">
-      <h1 className="text-3xl font-bold text-center mb-8">Book Appointment</h1>
+    <div>
+      <SearchComp onSearch={handleSearch} />
       <div className="max-w-3xl mx-auto">
-        {doctors.map((doctor, index) => (
+        {filteredDoctors.map((doctor, index) => (
           <DoctorCard key={index} doctor={doctor} />
         ))}
       </div>
@@ -45,52 +125,4 @@ const DoctorsList = ({ doctors }) => {
   );
 };
 
-// Example list of doctors
-const doctorsData = [
-  {
-    name: "Dr. Samuel",
-    location: "Bengaluru",
-    languages: ["Hindi", "English"],
-    specialization: "ENT",
-    phone: "55664354",
-  },
-  {
-    name: "Dr. Anita",
-    location: "Mumbai",
-    languages: ["Marathi", "English"],
-    specialization: "Cardiology",
-    phone: "99887766",
-  },
-  {
-    name: "Dr. Rajesh Kumar",
-    location: "Delhi",
-    languages: ["Hindi", "English"],
-    specialization: "Orthopedics",
-    phone: "98765432"
-  },
-  {
-    name: "Dr. Priya Sharma",
-    location: "Bengaluru",
-    languages: ["Kannada", "English"],
-    specialization: "Dermatology",
-    phone: "91234567"
-  },
-  {
-    name: "Dr. Anil Verma",
-    location: "Kolkata",
-    languages: ["Bengali", "English"],
-    specialization: "Pediatrics",
-    phone: "99887755"
-  },
-  {
-    name: "Dr. Sunita Patel",
-    location: "Ahmedabad",
-    languages: ["Gujarati", "English"],
-    specialization: "Gynecology",
-    phone: "94567890"
-  }
-];
-
-export default function Page() {
-  return <DoctorsList doctors={doctorsData} />;
-}
+export default DoctorsList;
