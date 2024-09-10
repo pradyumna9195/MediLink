@@ -2,14 +2,17 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'; 
+import { useRouter } from "next/navigation";
+import doctorsData from "@/app/data/doctorData/page";
 
+// Search component inside DoctorCard.js
 const SearchComp = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchTerm(query);
-    onSearch(query); // Pass the search term back to the parent
+    onSearch(query);
   };
 
   return (
@@ -28,7 +31,14 @@ const SearchComp = ({ onSearch }) => {
   );
 };
 
+// Individual doctor card component
 const DoctorCard = ({ doctor }) => {
+  const router = useRouter();
+
+  const handleBooking = (appointmentType) => {
+    router.push(`/models/user/AppointmentEnquiry?doctorId=${doctor.name}&appointmentType=${appointmentType}`);
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg mb-6 text-black transition-transform transform hover:scale-105 hover:shadow-2xl">
       <p className="text-xl font-bold mb-4 text-center">Name of Doctor: {doctor.name}</p>
@@ -47,10 +57,16 @@ const DoctorCard = ({ doctor }) => {
         </p>
       </div>
       <div className="flex justify-center space-x-4">
-        <button className="w-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition duration-300">
+        <button
+          className="w-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+          onClick={() => handleBooking('online')}
+        >
           Online
         </button>
-        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
+        <button
+          onClick={() => handleBooking('offline')}
+          className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300"
+        >
           Offline
         </button>
       </div>
@@ -58,51 +74,9 @@ const DoctorCard = ({ doctor }) => {
   );
 };
 
+// Main component that includes search and the list of doctors
 const DoctorsList = () => {
-  const doctorsData = [
-    {
-      name: "Dr. Samuel",
-      location: "Bengaluru",
-      languages: ["Hindi", "English"],
-      specialization: "ENT",
-      phone: "55664354",
-    },
-    {
-      name: "Dr. Anita",
-      location: "Mumbai",
-      languages: ["Marathi", "English"],
-      specialization: "Cardiology",
-      phone: "99887766",
-    },
-    {
-      name: "Dr. Rajesh Kumar",
-      location: "Delhi",
-      languages: ["Hindi", "English"],
-      specialization: "Orthopedics",
-      phone: "98765432",
-    },
-    {
-      name: "Dr. Priya Sharma",
-      location: "Bengaluru",
-      languages: ["Kannada", "English"],
-      specialization: "Dermatology",
-      phone: "91234567",
-    },
-    {
-      name: "Dr. Anil Verma",
-      location: "Kolkata",
-      languages: ["Bengali", "English"],
-      specialization: "Pediatrics",
-      phone: "99887755",
-    },
-    {
-      name: "Dr. Sunita Patel",
-      location: "Ahmedabad",
-      languages: ["Gujarati", "English"],
-      specialization: "Gynecology",
-      phone: "94567890",
-    },
-  ];
+
 
   const [filteredDoctors, setFilteredDoctors] = useState(doctorsData);
 
